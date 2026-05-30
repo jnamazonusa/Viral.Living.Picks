@@ -1,0 +1,35 @@
+name: 링크 페이지 자동 배포
+
+on:
+  push:
+    paths:
+      - 'products.json'   # products.json 수정하면 자동 실행
+  workflow_dispatch:       # 수동 실행도 가능
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: Python 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: index.html 생성
+        run: python generate_page.py
+
+      - name: GitHub Pages 배포
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          exclude_assets: '.github,generate_page.py,products.json,README.md'
