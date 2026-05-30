@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MY PICKS — @your_instagram</title>
+  <meta property="og:title" content="MY PICKS">
+  <meta property="og:description" content="직접 써보고 추천하는 제품들 ✦">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.15);
+      --text: #f0f0f0;
+      --text2: #888;
+      --accent: #C8FF00;
+      --accent-dim: #C8FF0022;
+      --radius: 12px;
+      --font-mono: 'Space Mono', monospace;
+      --font-sans: 'Noto Sans KR', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 헤더 ── */
+    .header {
+      text-align: center;
+      padding: 60px 24px 40px;
+      position: relative;
+    }
+    .header::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto;
+      margin-top: 32px;
+    }
+    .handle {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .site-title {
+      font-family: var(--font-mono);
+      font-size: clamp(32px, 8vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .site-bio {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--text2);
+      font-weight: 300;
+    }
+    .updated {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text2);
+      opacity: 0.5;
+    }
+
+    /* ── 필터 ── */
+    .filter-wrap {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 24px 32px;
+    }
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 7px 16px;
+      border: 1px solid var(--border2);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* ── 그리드 ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      padding: 0 24px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── 카드 ── */
+    .card {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 0 24px #C8FF0018;
+    }
+    .card.hidden { display: none; }
+
+    .card-img-wrap {
+      position: relative;
+      background: #fff;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 12px;
+      transition: transform 0.3s ease;
+    }
+    .card:hover .card-img-wrap img { transform: scale(1.04); }
+
+    .tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--accent);
+      color: #000;
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    .category-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    .card-desc {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .stars { color: var(--accent); font-size: 13px; }
+    .rating-num { color: var(--text); font-weight: 500; }
+    .review-count { color: var(--text2); }
+
+    .card-footer {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .price {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .cta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── 푸터 ── */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text2);
+      font-family: var(--font-mono);
+      line-height: 1.8;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 12px 60px; }
+      .card-body { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <p class="handle">@your_instagram</p>
+    <h1 class="site-title">MY PICKS</h1>
+    <p class="site-bio">직접 써보고 추천하는 제품들 ✦</p>
+    <p class="updated">2026.05.30 업데이트</p>
+  </header>
+
+  <nav class="filter-wrap">
+    <button class="filter-btnactive" data-filter="전체">전체</button>
+<button class="filter-btn" data-filter="전자기기">전자기기</button>
+<button class="filter-btn" data-filter="생활가전">생활가전</button>
+<button class="filter-btn" data-filter="뷰티">뷰티</button>
+<button class="filter-btn" data-filter="주방">주방</button>
+  </nav>
+
+  <main class="grid" id="grid">
+    
+    <a class="card" href="https://amzn.to/YOUR_TAG_HERE" target="_blank" rel="noopener" data-category="전자기기">
+      <div class="card-img-wrap">
+        <img src="https://m.media-amazon.com/images/I/61eVNBHaBFL._AC_SL1500_.jpg" alt="Sony WH-1000XM5 노이즈 캔슬링 헤드폰" loading="lazy" onerror="this.style.display='none'">
+        <span class="tag">베스트셀러</span>
+      </div>
+      <div class="card-body">
+        <span class="category-badge">전자기기</span>
+        <h3 class="card-title">Sony WH-1000XM5 노이즈 캔슬링 헤드폰</h3>
+        <p class="card-desc">완벽한 노이즈 캔슬링, 30시간 배터리</p>
+        <div class="card-meta">
+          <span class="stars">★★★★½</span>
+          <span class="rating-num">4.8</span>
+          <span class="review-count">(2,341)</span>
+        </div>
+        <div class="card-footer">
+          <span class="price">₩389,000</span>
+          <span class="cta">아마존에서 보기 →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="https://amzn.to/YOUR_TAG_HERE" target="_blank" rel="noopener" data-category="생활가전">
+      <div class="card-img-wrap">
+        <img src="https://m.media-amazon.com/images/I/71UOyEAZ3rL._AC_SL1500_.jpg" alt="Dyson V15 Detect 무선 청소기" loading="lazy" onerror="this.style.display='none'">
+        <span class="tag">내가 씀</span>
+      </div>
+      <div class="card-body">
+        <span class="category-badge">생활가전</span>
+        <h3 class="card-title">Dyson V15 Detect 무선 청소기</h3>
+        <p class="card-desc">레이저로 먼지 감지, 강력한 흡입력</p>
+        <div class="card-meta">
+          <span class="stars">★★★★½</span>
+          <span class="rating-num">4.7</span>
+          <span class="review-count">(1,872)</span>
+        </div>
+        <div class="card-footer">
+          <span class="price">₩899,000</span>
+          <span class="cta">아마존에서 보기 →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="https://amzn.to/YOUR_TAG_HERE" target="_blank" rel="noopener" data-category="전자기기">
+      <div class="card-img-wrap">
+        <img src="https://m.media-amazon.com/images/I/61o17c1C0kL._AC_SL1500_.jpg" alt="Anker 733 GaNPrime 67W 충전기" loading="lazy" onerror="this.style.display='none'">
+        <span class="tag">가성비 픽</span>
+      </div>
+      <div class="card-body">
+        <span class="category-badge">전자기기</span>
+        <h3 class="card-title">Anker 733 GaNPrime 67W 충전기</h3>
+        <p class="card-desc">노트북+폰 동시충전, 초소형 사이즈</p>
+        <div class="card-meta">
+          <span class="stars">★★★★½</span>
+          <span class="rating-num">4.9</span>
+          <span class="review-count">(5,621)</span>
+        </div>
+        <div class="card-footer">
+          <span class="price">₩49,900</span>
+          <span class="cta">아마존에서 보기 →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="https://amzn.to/YOUR_TAG_HERE" target="_blank" rel="noopener" data-category="뷰티">
+      <div class="card-img-wrap">
+        <img src="https://m.media-amazon.com/images/I/61WvRMCGF3L._AC_SL1500_.jpg" alt="COSRX 달팽이 뮤신 96% 에센스" loading="lazy" onerror="this.style.display='none'">
+        <span class="tag">글로벌 히트</span>
+      </div>
+      <div class="card-body">
+        <span class="category-badge">뷰티</span>
+        <h3 class="card-title">COSRX 달팽이 뮤신 96% 에센스</h3>
+        <p class="card-desc">전세계 K-뷰티 1위, 보습 끝판왕</p>
+        <div class="card-meta">
+          <span class="stars">★★★★½</span>
+          <span class="rating-num">4.8</span>
+          <span class="review-count">(89,432)</span>
+        </div>
+        <div class="card-footer">
+          <span class="price">₩18,500</span>
+          <span class="cta">아마존에서 보기 →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="https://amzn.to/YOUR_TAG_HERE" target="_blank" rel="noopener" data-category="주방">
+      <div class="card-img-wrap">
+        <img src="https://m.media-amazon.com/images/I/71VDdkivS3L._AC_SL1500_.jpg" alt="Vitamix E310 블렌더" loading="lazy" onerror="this.style.display='none'">
+        <span class="tag">스무디 맛집</span>
+      </div>
+      <div class="card-body">
+        <span class="category-badge">주방</span>
+        <h3 class="card-title">Vitamix E310 블렌더</h3>
+        <p class="card-desc">10년 보증, 전문가급 성능</p>
+        <div class="card-meta">
+          <span class="stars">★★★★½</span>
+          <span class="rating-num">4.8</span>
+          <span class="review-count">(3,201)</span>
+        </div>
+        <div class="card-footer">
+          <span class="price">₩489,000</span>
+          <span class="cta">아마존에서 보기 →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="https://amzn.to/YOUR_TAG_HERE" target="_blank" rel="noopener" data-category="전자기기">
+      <div class="card-img-wrap">
+        <img src="https://m.media-amazon.com/images/I/61Ww4abDGrL._AC_SL1500_.jpg" alt="Kindle Paperwhite 16GB" loading="lazy" onerror="this.style.display='none'">
+        <span class="tag">독서 필수템</span>
+      </div>
+      <div class="card-body">
+        <span class="category-badge">전자기기</span>
+        <h3 class="card-title">Kindle Paperwhite 16GB</h3>
+        <p class="card-desc">방수, 6주 배터리, 눈 편한 디스플레이</p>
+        <div class="card-meta">
+          <span class="stars">★★★★½</span>
+          <span class="rating-num">4.7</span>
+          <span class="review-count">(12,043)</span>
+        </div>
+        <div class="card-footer">
+          <span class="price">₩189,000</span>
+          <span class="cta">아마존에서 보기 →</span>
+        </div>
+      </div>
+    </a>
+  </main>
+
+  <footer>
+    <p>이 페이지의 링크는 아마존 어필리에이트 링크입니다.</p>
+    <p>구매 시 추가 비용 없이 소정의 수수료가 지급됩니다.</p>
+    <p style="margin-top:8px"><a href="https://www.instagram.com/your_instagram">@your_instagram</a></p>
+  </footer>
+
+  <script>
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards   = document.querySelectorAll('.card');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        cards.forEach(c => {
+          c.classList.toggle('hidden', f !== '전체' && c.dataset.category !== f);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
